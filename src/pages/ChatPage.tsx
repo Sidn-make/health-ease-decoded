@@ -20,8 +20,22 @@ const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [documentContext, setDocumentContext] = useState<any[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("scan_entries")
+      .select("title, document_type, summary, breakdown, next_steps, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .then(({ data }) => {
+        if (data) setDocumentContext(data);
+      });
+  }, [user]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
