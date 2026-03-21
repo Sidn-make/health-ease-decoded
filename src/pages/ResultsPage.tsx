@@ -28,7 +28,7 @@ const ResultsPage = () => {
       {/* Header */}
       <div className="px-5 pt-6 pb-4 flex items-center gap-3">
         <button
-          onClick={() => navigate("/scan")}
+          onClick={() => navigate("/app")}
           className="w-9 h-9 rounded-xl bg-card shadow-card flex items-center justify-center"
         >
           <ArrowLeft size={18} className="text-foreground" />
