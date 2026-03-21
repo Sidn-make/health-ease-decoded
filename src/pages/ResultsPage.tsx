@@ -24,11 +24,11 @@ const ResultsPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen">
       {/* Header */}
       <div className="px-5 pt-6 pb-4 flex items-center gap-3">
         <button
-          onClick={() => navigate("/scan")}
+          onClick={() => navigate("/app")}
           className="w-9 h-9 rounded-xl bg-card shadow-card flex items-center justify-center"
         >
           <ArrowLeft size={18} className="text-foreground" />
@@ -107,7 +107,7 @@ const ResultsPage = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          onClick={() => navigate("/chat")}
+          onClick={() => navigate("/app/chat")}
           className="w-full gradient-primary text-primary-foreground font-semibold py-4 rounded-2xl shadow-elevated flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
         >
           <MessageCircle size={18} />

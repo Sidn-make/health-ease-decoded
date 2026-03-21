@@ -126,7 +126,7 @@ const ChatPage = () => {
       </div>
 
       {/* Input */}
-      <div className="px-5 pb-24 pt-3 border-t border-border bg-background">
+      <div className="px-5 pb-6 pt-3 border-t border-border bg-background">
         <div className="flex items-center gap-2 bg-card rounded-2xl shadow-card px-4 py-2">
           <input
             value={input}
