@@ -21,7 +21,7 @@ const ScanPage = () => {
     setAnalyzing(true);
     // Simulate analysis, then navigate to results
     setTimeout(() => {
-      navigate("/results");
+      navigate("/app/results");
     }, 2000);
   };
 
