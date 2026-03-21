@@ -63,6 +63,7 @@ const ChatPage = () => {
 
     await streamChat({
       messages: newMessages,
+      documentContext,
       onDelta: (chunk) => upsertAssistant(chunk),
       onDone: () => setIsLoading(false),
       onError: (error) => {
