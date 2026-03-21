@@ -25,7 +25,7 @@ const AuthPage = () => {
         if (error) throw error;
         navigate("/app");
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -34,10 +34,14 @@ const AuthPage = () => {
           },
         });
         if (error) throw error;
-        toast({
-          title: "Check your email",
-          description: "We sent you a confirmation link to verify your account.",
-        });
+        if (data.session) {
+          navigate("/app");
+        } else {
+          toast({
+            title: "Check your email",
+            description: "We sent you a confirmation link to verify your account.",
+          });
+        }
       }
     } catch (error: any) {
       toast({
