@@ -24,7 +24,7 @@ const ResultsPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen">
       {/* Header */}
       <div className="px-5 pt-6 pb-4 flex items-center gap-3">
         <button

@@ -10,7 +10,7 @@ const menuItems = [
 
 const ProfilePage = () => {
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen">
       <div className="px-5 pt-6 pb-4">
         <h1 className="text-xl font-bold text-foreground">Profile</h1>
       </div>
