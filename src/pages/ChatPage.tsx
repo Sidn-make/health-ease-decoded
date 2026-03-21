@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp, Shield, Sparkles } from "lucide-react";
+import { streamChat } from "@/lib/ai";
+import { useToast } from "@/hooks/use-toast";
+import ReactMarkdown from "react-markdown";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -14,38 +17,49 @@ const suggestions = [
 const ChatPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
-  const send = (text: string) => {
-    if (!text.trim()) return;
+  const send = async (text: string) => {
+    if (!text.trim() || isLoading) return;
     const userMsg: Message = { role: "user", content: text.trim() };
-    setMessages((prev) => [...prev, userMsg]);
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
     setInput("");
-    setIsTyping(true);
+    setIsLoading(true);
 
-    // Mock AI response
-    setTimeout(() => {
-      const responses: Record<string, string> = {
-        default:
-          "Great question! I'd be happy to help you understand your healthcare documents. Once the AI backend is connected, I'll give you personalized answers based on your specific documents and insurance plan. For now, feel free to explore the app!",
-      };
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: responses.default },
-      ]);
-      setIsTyping(false);
-    }, 1500);
+    let assistantSoFar = "";
+    const upsertAssistant = (nextChunk: string) => {
+      assistantSoFar += nextChunk;
+      setMessages((prev) => {
+        const last = prev[prev.length - 1];
+        if (last?.role === "assistant") {
+          return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantSoFar } : m));
+        }
+        return [...prev, { role: "assistant", content: assistantSoFar }];
+      });
+    };
+
+    await streamChat({
+      messages: newMessages,
+      onDelta: (chunk) => upsertAssistant(chunk),
+      onDone: () => setIsLoading(false),
+      onError: (error) => {
+        setIsLoading(false);
+        toast({ title: "Error", description: error, variant: "destructive" });
+      },
+    });
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-[calc(100vh-3rem)]">
       {/* Header */}
-      <div className="px-5 pt-6 pb-3 border-b border-border">
+      <div className="px-5 pt-4 pb-3 border-b border-border">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
             <Sparkles size={16} className="text-primary-foreground" />
@@ -103,12 +117,18 @@ const ChatPage = () => {
                         : "bg-card shadow-card text-foreground rounded-bl-md"
                     }`}
                   >
-                    {msg.content}
+                    {msg.role === "assistant" ? (
+                      <div className="prose prose-sm max-w-none prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground">
+                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                      </div>
+                    ) : (
+                      msg.content
+                    )}
                   </div>
                 </motion.div>
               ))}
             </AnimatePresence>
-            {isTyping && (
+            {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -134,10 +154,11 @@ const ChatPage = () => {
             onKeyDown={(e) => e.key === "Enter" && send(input)}
             placeholder="Ask about your healthcare..."
             className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none py-1.5"
+            disabled={isLoading}
           />
           <button
             onClick={() => send(input)}
-            disabled={!input.trim()}
+            disabled={!input.trim() || isLoading}
             className="w-8 h-8 rounded-xl gradient-primary flex items-center justify-center disabled:opacity-30 active:scale-[0.9] transition-transform"
           >
             <ArrowUp size={16} className="text-primary-foreground" />

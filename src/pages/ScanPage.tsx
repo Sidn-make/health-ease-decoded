@@ -2,9 +2,15 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Camera, Upload, Image, X, ArrowRight, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { analyzeDocument, type DocumentAnalysis } from "@/lib/ai";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 const ScanPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [preview, setPreview] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
 
@@ -17,12 +23,43 @@ const ScanPage = () => {
     }
   };
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
+    if (!preview) return;
     setAnalyzing(true);
-    // Simulate analysis, then navigate to results
-    setTimeout(() => {
-      navigate("/app/results");
-    }, 2000);
+
+    try {
+      const analysis: DocumentAnalysis = await analyzeDocument(preview);
+
+      // Save to database
+      if (user) {
+        const { data, error } = await supabase.from("scan_entries").insert({
+          user_id: user.id,
+          title: analysis.title || "Untitled Scan",
+          document_type: analysis.document_type,
+          summary: analysis.summary,
+          breakdown: analysis.breakdown,
+          next_steps: analysis.next_steps,
+          image_url: preview.substring(0, 500), // Store a truncated reference
+        }).select("id").single();
+
+        if (error) {
+          console.error("Save error:", error);
+          toast({ title: "Warning", description: "Analysis complete but couldn't save. Showing results anyway." });
+        }
+
+        if (data) {
+          navigate(`/app/entry/${data.id}`);
+          return;
+        }
+      }
+
+      // Fallback: pass via state
+      navigate("/app/results", { state: { analysis } });
+    } catch (error: any) {
+      toast({ title: "Analysis Failed", description: error.message, variant: "destructive" });
+    } finally {
+      setAnalyzing(false);
+    }
   };
 
   return (
@@ -44,7 +81,6 @@ const ScanPage = () => {
               exit={{ opacity: 0 }}
               className="flex flex-col gap-3"
             >
-              {/* Camera option */}
               <label className="bg-card rounded-2xl p-6 shadow-card flex flex-col items-center gap-3 cursor-pointer active:scale-[0.98] transition-transform">
                 <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-card">
                   <Camera size={28} className="text-primary-foreground" />
@@ -53,16 +89,9 @@ const ScanPage = () => {
                   <p className="text-sm font-semibold text-foreground">Take a Photo</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Use your camera to capture the document</p>
                 </div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  capture="environment"
-                  onChange={handleFile}
-                  className="hidden"
-                />
+                <input type="file" accept="image/*" capture="environment" onChange={handleFile} className="hidden" />
               </label>
 
-              {/* Upload option */}
               <label className="bg-card rounded-2xl p-6 shadow-card flex flex-col items-center gap-3 cursor-pointer active:scale-[0.98] transition-transform">
                 <div className="w-16 h-16 rounded-2xl bg-secondary flex items-center justify-center">
                   <Upload size={28} className="text-secondary-foreground" />
@@ -71,15 +100,9 @@ const ScanPage = () => {
                   <p className="text-sm font-semibold text-foreground">Upload from Gallery</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Choose an existing photo or PDF</p>
                 </div>
-                <input
-                  type="file"
-                  accept="image/*,.pdf"
-                  onChange={handleFile}
-                  className="hidden"
-                />
+                <input type="file" accept="image/*,.pdf" onChange={handleFile} className="hidden" />
               </label>
 
-              {/* Supported formats */}
               <div className="flex items-center justify-center gap-4 mt-2">
                 {["Medical Bills", "EOBs", "Insurance Cards"].map((type) => (
                   <div key={type} className="flex items-center gap-1.5">
@@ -97,22 +120,16 @@ const ScanPage = () => {
               exit={{ opacity: 0 }}
               className="flex flex-col gap-4"
             >
-              {/* Image preview */}
               <div className="relative rounded-2xl overflow-hidden shadow-elevated">
-                <img
-                  src={preview}
-                  alt="Scanned document"
-                  className="w-full max-h-80 object-cover"
-                />
+                <img src={preview} alt="Scanned document" className="w-full max-h-80 object-cover" />
                 <button
-                  onClick={() => setPreview(null)}
+                  onClick={() => { setPreview(null); setAnalyzing(false); }}
                   className="absolute top-3 right-3 w-8 h-8 rounded-full bg-foreground/60 backdrop-blur-sm flex items-center justify-center"
                 >
                   <X size={16} className="text-primary-foreground" />
                 </button>
               </div>
 
-              {/* Analyze button */}
               <button
                 onClick={handleAnalyze}
                 disabled={analyzing}
@@ -121,7 +138,7 @@ const ScanPage = () => {
                 {analyzing ? (
                   <>
                     <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    Analyzing...
+                    Analyzing with AI...
                   </>
                 ) : (
                   <>
