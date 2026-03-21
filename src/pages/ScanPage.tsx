@@ -26,7 +26,7 @@ const ScanPage = () => {
   };
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen p-0">
       <div className="px-5 pt-6 pb-4">
         <h1 className="text-xl font-bold text-foreground">Scan Document</h1>
         <p className="text-sm text-muted-foreground mt-1">

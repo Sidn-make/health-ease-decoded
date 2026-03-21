@@ -107,7 +107,7 @@ const ResultsPage = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          onClick={() => navigate("/chat")}
+          onClick={() => navigate("/app/chat")}
           className="w-full gradient-primary text-primary-foreground font-semibold py-4 rounded-2xl shadow-elevated flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
         >
           <MessageCircle size={18} />
