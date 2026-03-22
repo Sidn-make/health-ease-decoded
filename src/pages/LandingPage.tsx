@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Shield, ArrowRight, Scan, MessageCircle, BookOpen } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import AnimatedBackground from "@/components/AnimatedBackground";
 
 const features = [
   {
@@ -24,11 +25,13 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background relative overflow-hidden">
+      <AnimatedBackground />
+
       {/* Nav */}
-      <header className="px-6 py-4 flex items-center justify-between">
+      <header className="px-6 py-4 flex items-center justify-between relative z-10">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center">
+          <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center shadow-elevated">
             <Shield size={18} className="text-primary-foreground" />
           </div>
           <span className="text-lg font-bold text-foreground tracking-tight">ClearCare</span>
@@ -42,7 +45,7 @@ const LandingPage = () => {
       </header>
 
       {/* Hero */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 text-center">
+      <main className="flex-1 flex flex-col items-center justify-center px-6 text-center relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -81,7 +84,7 @@ const LandingPage = () => {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + i * 0.1 }}
-                className="bg-card rounded-2xl p-4 shadow-card flex items-start gap-4 text-left"
+                className="bg-card/80 backdrop-blur-sm rounded-2xl p-4 shadow-card flex items-start gap-4 text-left"
               >
                 <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
                   <f.icon size={18} className="text-primary" />
@@ -96,7 +99,7 @@ const LandingPage = () => {
         </div>
       </main>
 
-      <footer className="py-6 text-center">
+      <footer className="py-6 text-center relative z-10">
         <p className="text-[11px] text-muted-foreground">© 2026 ClearCare. Your health data stays private.</p>
       </footer>
     </div>

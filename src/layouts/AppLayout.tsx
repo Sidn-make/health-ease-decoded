@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import BottomNav from "@/components/BottomNav";
+import AnimatedBackground from "@/components/AnimatedBackground";
 
 const AppLayout = () => {
   const { user, loading } = useAuth();
@@ -18,8 +19,9 @@ const AppLayout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="pb-24 overflow-y-auto">
+    <div className="min-h-screen bg-background relative">
+      <AnimatedBackground />
+      <main className="pb-24 overflow-y-auto relative z-10">
         <Outlet />
       </main>
       <BottomNav />

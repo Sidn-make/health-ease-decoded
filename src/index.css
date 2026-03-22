@@ -47,6 +47,7 @@
     --surface-elevated: 0 0% 100%;
     --gradient-primary: linear-gradient(135deg, hsl(168 70% 38%), hsl(175 65% 45%));
     --gradient-warm: linear-gradient(135deg, hsl(38 92% 55%), hsl(25 90% 55%));
+    --gradient-hero: linear-gradient(160deg, hsl(168 70% 38% / 0.08) 0%, hsl(175 65% 45% / 0.04) 40%, hsl(38 92% 55% / 0.06) 70%, hsl(160 20% 97%) 100%);
     --shadow-card: 0 1px 3px hsl(200 25% 10% / 0.04), 0 4px 12px hsl(200 25% 10% / 0.06);
     --shadow-elevated: 0 4px 16px hsl(200 25% 10% / 0.08), 0 8px 32px hsl(200 25% 10% / 0.04);
   }
@@ -61,7 +62,6 @@
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Safe area for native */
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
   }
@@ -80,7 +80,57 @@
   .gradient-warm {
     background: var(--gradient-warm);
   }
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
   .safe-bottom {
     padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
+}
+
+/* Animated floating orbs */
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+@keyframes float-medium {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-40px, -30px) scale(1.08); }
+}
+@keyframes float-fast {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(20px, 30px) scale(0.97); }
+  75% { transform: translate(-30px, -10px) scale(1.03); }
+}
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.orb-1 {
+  width: 280px;
+  height: 280px;
+  background: hsl(168 70% 38% / 0.15);
+  top: -60px;
+  right: -80px;
+  animation: float-slow 12s ease-in-out infinite;
+}
+.orb-2 {
+  width: 200px;
+  height: 200px;
+  background: hsl(38 92% 55% / 0.12);
+  bottom: 20%;
+  left: -60px;
+  animation: float-medium 10s ease-in-out infinite;
+}
+.orb-3 {
+  width: 160px;
+  height: 160px;
+  background: hsl(175 65% 45% / 0.1);
+  top: 40%;
+  right: -40px;
+  animation: float-fast 8s ease-in-out infinite;
 }

@@ -4,6 +4,7 @@ import { Shield, ArrowLeft, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import AnimatedBackground from "@/components/AnimatedBackground";
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -55,19 +56,21 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background px-6">
+    <div className="min-h-screen flex flex-col bg-background px-6 relative overflow-hidden">
+      <AnimatedBackground />
+
       {/* Back */}
-      <div className="pt-4">
+      <div className="pt-4 relative z-10">
         <button onClick={() => navigate("/")} className="w-9 h-9 rounded-xl bg-card shadow-card flex items-center justify-center">
           <ArrowLeft size={18} className="text-foreground" />
         </button>
       </div>
 
-      <div className="flex-1 flex flex-col justify-center max-w-sm mx-auto w-full">
+      <div className="flex-1 flex flex-col justify-center max-w-sm mx-auto w-full relative z-10">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
           {/* Logo */}
           <div className="flex items-center gap-2.5 mb-8">
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-elevated">
               <Shield size={20} className="text-primary-foreground" />
             </div>
             <span className="text-xl font-bold text-foreground">ClearCare</span>
@@ -90,7 +93,7 @@ const AuthPage = () => {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required={!isLogin}
-                  className="w-full bg-card shadow-card rounded-xl pl-11 pr-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30"
+                  className="w-full bg-card/80 backdrop-blur-sm shadow-card rounded-xl pl-11 pr-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30"
                 />
               </div>
             )}
@@ -103,7 +106,7 @@ const AuthPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-card shadow-card rounded-xl pl-11 pr-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full bg-card/80 backdrop-blur-sm shadow-card rounded-xl pl-11 pr-4 py-3.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30"
               />
             </div>
 
@@ -116,7 +119,7 @@ const AuthPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full bg-card shadow-card rounded-xl pl-11 pr-11 py-3.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full bg-card/80 backdrop-blur-sm shadow-card rounded-xl pl-11 pr-11 py-3.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/30"
               />
               <button
                 type="button"
