@@ -1,9 +1,13 @@
 const AnimatedBackground = () => (
-  <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-    <div className="orb orb-1" />
-    <div className="orb orb-2" />
-    <div className="orb orb-3" />
-  </div>
+  <>
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+      <div className="orb orb-1" />
+      <div className="orb orb-2" />
+      <div className="orb orb-3" />
+      <div className="orb orb-4" />
+    </div>
+    <div className="grain-overlay" />
+  </>
 );
 
 export default AnimatedBackground;
