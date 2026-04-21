@@ -3,24 +3,24 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 160 20% 97%;
-    --foreground: 200 25% 10%;
+:root {
+    --background: 168 40% 94%;
+    --foreground: 200 30% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 200 25% 10%;
+    --card-foreground: 200 30% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 200 25% 10%;
+    --popover-foreground: 200 30% 12%;
 
     --primary: 168 70% 38%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 160 25% 92%;
-    --secondary-foreground: 200 25% 15%;
+    --secondary: 160 30% 88%;
+    --secondary-foreground: 200 30% 15%;
 
-    --muted: 160 15% 94%;
-    --muted-foreground: 200 10% 46%;
+    --muted: 160 20% 90%;
+    --muted-foreground: 200 15% 42%;
 
     --accent: 38 92% 55%;
     --accent-foreground: 38 92% 15%;
@@ -28,8 +28,8 @@
     --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 160 15% 89%;
-    --input: 160 15% 89%;
+    --border: 160 20% 85%;
+    --input: 160 20% 85%;
     --ring: 168 70% 38%;
 
     --radius: 1rem;
@@ -47,9 +47,9 @@
     --surface-elevated: 0 0% 100%;
     --gradient-primary: linear-gradient(135deg, hsl(168 70% 38%), hsl(175 65% 45%));
     --gradient-warm: linear-gradient(135deg, hsl(38 92% 55%), hsl(25 90% 55%));
-    --gradient-hero: linear-gradient(160deg, hsl(168 70% 38% / 0.08) 0%, hsl(175 65% 45% / 0.04) 40%, hsl(38 92% 55% / 0.06) 70%, hsl(160 20% 97%) 100%);
-    --shadow-card: 0 1px 3px hsl(200 25% 10% / 0.04), 0 4px 12px hsl(200 25% 10% / 0.06);
-    --shadow-elevated: 0 4px 16px hsl(200 25% 10% / 0.08), 0 8px 32px hsl(200 25% 10% / 0.04);
+    --gradient-hero: linear-gradient(160deg, hsl(168 70% 38% / 0.15) 0%, hsl(175 65% 45% / 0.1) 40%, hsl(38 92% 55% / 0.12) 70%, hsl(168 40% 94%) 100%);
+    --shadow-card: 0 1px 3px hsl(200 30% 12% / 0.05), 0 4px 12px hsl(200 30% 12% / 0.08);
+    --shadow-elevated: 0 4px 16px hsl(200 30% 12% / 0.1), 0 8px 32px hsl(200 30% 12% / 0.06);
   }
 }
 
